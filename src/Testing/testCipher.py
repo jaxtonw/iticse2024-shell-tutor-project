@@ -24,9 +24,196 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 
 import unittest
+from main import cipherChar, cipherString
 
 class TestCipher(unittest.TestCase):
-    ...
+    def testCipherCharAccuracyUppercase(self):
+        upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+        upperAlphabetShiftedOne = "BCDEFGHIJKLMNOPQRSTUVWXYZA"
+        for inputStr, expectedOutputStr in zip(upperAlphabet, upperAlphabetShiftedOne):
+            cipherOutput = cipherChar(inputStr, 1)
+            self.assertEquals(cipherOutput, expectedOutputStr)
+
+        upperAlphabetShiftedFive = "FGHIJKLMNOPQRSTUVWXYZABCDE"
+        for inputStr, expectedOutputStr in zip(upperAlphabet, upperAlphabetShiftedFive):
+            cipherOutput = cipherChar(inputStr, 5)
+            self.assertEquals(cipherOutput, expectedOutputStr)
+
+        upperAlphabetShiftedTen = "KLMNOPQRSTUVWXYZABCDEFGHIJ"
+        for inputStr, expectedOutputStr in zip(upperAlphabet, upperAlphabetShiftedTen):
+            cipherOutput = cipherChar(inputStr, 10)
+            self.assertEquals(cipherOutput, expectedOutputStr)
+
+        upperAlphabetShiftedFifteen = "PQRSTUVWXYZABCDEFGHIJKLMNO"
+        for inputStr, expectedOutputStr in zip(upperAlphabet, upperAlphabetShiftedFifteen):
+            cipherOutput = cipherChar(inputStr, 15)
+            self.assertEquals(cipherOutput, expectedOutputStr)
+
+        upperAlphabetShiftedTwenty = "UVWXYZABCDEFGHIJKLMNOPQRST"
+        for inputStr, expectedOutputStr in zip(upperAlphabet, upperAlphabetShiftedTwenty):
+            cipherOutput = cipherChar(inputStr, 20)
+            self.assertEquals(cipherOutput, expectedOutputStr)
+
+        upperAlphabetShiftedTwentyFive = "ZABCDEFGHIJKLMNOPQRSTUVWXY"
+        for inputStr, expectedOutputStr in zip(upperAlphabet, upperAlphabetShiftedTwentyFive):
+            cipherOutput = cipherChar(inputStr, 25)
+            self.assertEquals(cipherOutput, expectedOutputStr)
+
+    def testCipherCharAccuracyLowercase(self):
+        lowerAlphabet = "abcdefghijklmnopqrstuvwxyz"
+
+        lowerAlphabetShiftedOne = "bcdefghijklmnopqrstuvwxyza"
+        for inputStr, expectedOutputStr in zip(lowerAlphabet, lowerAlphabetShiftedOne):
+            cipherOutput = cipherChar(inputStr, 1)
+            self.assertEquals(cipherOutput, expectedOutputStr)
+
+        lowerAlphabetShiftedFive = "fghijklmnopqrstuvwxyzabcde"
+        for inputStr, expectedOutputStr in zip(lowerAlphabet, lowerAlphabetShiftedFive):
+            cipherOutput = cipherChar(inputStr, 5)
+            self.assertEquals(cipherOutput, expectedOutputStr)
+
+        lowerAlphabetShiftedTen = "klmnopqrstuvwxyzabcdefghij"
+        for inputStr, expectedOutputStr in zip(lowerAlphabet, lowerAlphabetShiftedTen):
+            cipherOutput = cipherChar(inputStr, 10)
+            self.assertEquals(cipherOutput, expectedOutputStr)
+
+        lowerAlphabetShiftedFifteen = "pqrstuvwxyzabcdefghijklmno"
+        for inputStr, expectedOutputStr in zip(lowerAlphabet, lowerAlphabetShiftedFifteen):
+            cipherOutput = cipherChar(inputStr, 15)
+            self.assertEquals(cipherOutput, expectedOutputStr)
+
+        lowerAlphabetShiftedTwenty = "uvwxyzabcdefghijklmnopqrst"
+        for inputStr, expectedOutputStr in zip(lowerAlphabet, lowerAlphabetShiftedTwenty):
+            cipherOutput = cipherChar(inputStr, 20)
+            self.assertEquals(cipherOutput, expectedOutputStr)
+
+        lowerAlphabetShiftedTwentyFive = "zabcdefghijklmnopqrstuvwxy"
+        for inputStr, expectedOutputStr in zip(lowerAlphabet, lowerAlphabetShiftedTwentyFive):
+            cipherOutput = cipherChar(inputStr, 25)
+            self.assertEquals(cipherOutput, expectedOutputStr)
+
+    def testCipherCharAccuracyNoShift(self):
+        upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        for inputStr in upperAlphabet:
+            cipherOutput = cipherChar(inputStr, 0)
+            self.assertEquals(cipherOutput, inputStr)
+
+        lowerAlphabet = "abcdefghijklmnopqrstuvwxyz"
+        for inputStr in lowerAlphabet:
+            cipherOutput = cipherChar(inputStr, 0)
+            self.assertEquals(cipherOutput, inputStr)
+
+
+    def testCipherCharIgnoreNonAlphabetic(self):
+        testString = "./ !@#$%^&*()-_=`~<>~[]}{\n\t"
+        for inputStr in testString:
+            cipherOutput = cipherChar(inputStr, 1)
+            self.assertEquals(cipherOutput, inputStr)
+            cipherOutput = cipherChar(inputStr, 10)
+            self.assertEquals(cipherOutput, inputStr)
+            cipherOutput = cipherChar(inputStr, 20)
+            self.assertEquals(cipherOutput, inputStr)
+
+        numbers = "0123456789"
+        for inputStr in numbers:
+            cipherOutput = cipherChar(inputStr, 1)
+            self.assertEquals(cipherOutput, inputStr)
+            cipherOutput = cipherChar(inputStr, 10)
+            self.assertEquals(cipherOutput, inputStr)
+            cipherOutput = cipherChar(inputStr, 20)
+            self.assertEquals(cipherOutput, inputStr)
+    
+    def testCipherStringAccuracyLowercase(self):
+        lowerAlphabet = "abcdefghijklmnopqrstuvwxyz"
+        lowerAlphabetShiftedOne = "bcdefghijklmnopqrstuvwxyza"
+        self.assertEquals(cipherString(lowerAlphabet, 1), lowerAlphabetShiftedOne)
+
+        lowerAlphabetShiftedFive = "fghijklmnopqrstuvwxyzabcde"
+        self.assertEquals(cipherString(lowerAlphabet, 5), lowerAlphabetShiftedFive)
+
+        lowerAlphabetShiftedTen = "klmnopqrstuvwxyzabcdefghij"
+        self.assertEquals(cipherString(lowerAlphabet, 10), lowerAlphabetShiftedTen)
+
+        lowerAlphabetShiftedFifteen = "pqrstuvwxyzabcdefghijklmno"
+        self.assertEquals(cipherString(lowerAlphabet, 15), lowerAlphabetShiftedFifteen)
+
+        lowerAlphabetShiftedTwenty = "uvwxyzabcdefghijklmnopqrst"
+        self.assertEquals(cipherString(lowerAlphabet, 20), lowerAlphabetShiftedTwenty)
+
+        lowerAlphabetShiftedTwentyFive = "zabcdefghijklmnopqrstuvwxy"
+        self.assertEquals(cipherString(lowerAlphabet, 25), lowerAlphabetShiftedTwentyFive)
+
+    def testCipherStringAccuracyUppercase(self):
+        upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        upperAlphabetShiftedOne = "BCDEFGHIJKLMNOPQRSTUVWXYZA"
+        self.assertEquals(cipherString(upperAlphabet, 1), upperAlphabetShiftedOne)
+
+        upperAlphabetShiftedFive = "FGHIJKLMNOPQRSTUVWXYZABCDE"
+        self.assertEquals(cipherString(upperAlphabet, 5), upperAlphabetShiftedFive)
+
+        upperAlphabetShiftedTen = "KLMNOPQRSTUVWXYZABCDEFGHIJ"
+        self.assertEquals(cipherString(upperAlphabet, 10), upperAlphabetShiftedTen)
+
+        upperAlphabetShiftedFifteen = "PQRSTUVWXYZABCDEFGHIJKLMNO"
+        self.assertEquals(cipherString(upperAlphabet, 15), upperAlphabetShiftedFifteen)
+
+        upperAlphabetShiftedTwenty = "UVWXYZABCDEFGHIJKLMNOPQRST"
+        self.assertEquals(cipherString(upperAlphabet, 20), upperAlphabetShiftedTwenty)
+
+        upperAlphabetShiftedTwentyFive = "ZABCDEFGHIJKLMNOPQRSTUVWXY"
+        self.assertEquals(cipherString(upperAlphabet, 25), upperAlphabetShiftedTwentyFive)
+
+    def testCipherStringIgnoreNonAlphabetic(self):
+        testString = "./ !@#$%^&*()-_=`~<>~[]}{\n\t"
+        cipherOutput = cipherString(testString, 0)
+        self.assertEquals(cipherOutput, testString)
+        cipherOutput = cipherString(testString, 1)
+        self.assertEquals(cipherOutput, testString)
+        cipherOutput = cipherString(testString, 10)
+        self.assertEquals(cipherOutput, testString)
+        cipherOutput = cipherString(testString, 20)
+        self.assertEquals(cipherOutput, testString)
+
+        numbers = "0123456789"
+        cipherOutput = cipherString(numbers, 0)
+        self.assertEquals(cipherOutput, numbers)
+        cipherOutput = cipherString(numbers, 1)
+        self.assertEquals(cipherOutput, numbers)
+        cipherOutput = cipherString(numbers, 10)
+        self.assertEquals(cipherOutput, numbers)
+        cipherOutput = cipherString(numbers, 20)
+        self.assertEquals(cipherOutput, numbers)
+
+    def testCipherStringAccuracyMixedChars(self):
+        testString = "L3t's pU5h TH!s 2 tHE L1m!t!"
+        cipherOutput = cipherString(testString, 0)
+        self.assertEquals(cipherOutput, testString)
+
+        expectedOutputStr = "M3u't qV5i UI!t 2 uIF M1n!u!"
+        cipherOutput = cipherString(testString, 1)
+        self.assertEquals(cipherOutput, expectedOutputStr)
+
+        expectedOutputStr = "Q3y'x uZ5m YM!x 2 yMJ Q1r!y!"
+        cipherOutput = cipherString(testString, 5)
+        self.assertEquals(cipherOutput, expectedOutputStr)
+
+        expectedOutputStr = "V3d'c zE5r DR!c 2 dRO V1w!d!"
+        cipherOutput = cipherString(testString, 10)
+        self.assertEquals(cipherOutput, expectedOutputStr)
+
+        expectedOutputStr = "A3i'h eJ5w IW!h 2 iWT A1b!i!"
+        cipherOutput = cipherString(testString, 15)
+        self.assertEquals(cipherOutput, expectedOutputStr)
+
+        expectedOutputStr = "F3n'm jO5b NB!m 2 nBY F1g!n!"
+        cipherOutput = cipherString(testString, 20)
+        self.assertEquals(cipherOutput, expectedOutputStr)
+
+        expectedOutputStr = "K3s'r oT5g SG!r 2 sGD K1l!s!"
+        cipherOutput = cipherString(testString, 25)
+        self.assertEquals(cipherOutput, expectedOutputStr)
+
 
 if __name__ == "__main__":
     unittest.main()
