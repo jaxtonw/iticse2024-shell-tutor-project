@@ -82,15 +82,52 @@ This program should be relatively straight forward. However, I've found a few ke
     *   If given a character that shouldn't be ciphered, return that character as-is
 
 ### Function Psuedocode
-The psuedocode for these function stubs are going to use Python-isms, but won't necessarily be working Python code.
+The psuedocode for these function stubs are going to use Python-isms, but won't necessarily be working Python code. It will be *very* similar though, because Python is basically "executable psuedocode" by design. 
+
+I like Python's type hinting syntax, so I use it for function arguments and return types.
+
+#### Parse Command Line Arguments
+Parse the command line arguments correctly, continuing on to cipher message or print usage message and exit
+
+Returns nothing
+
+```py
+def parseCLArgs() -> None:
+    if len of sys.argv is 1:
+        usageMessage(exitCode=0)
+    if len of sys.argv is 2:
+        # Only the filename is provided, so do all rotations
+        rotationDist = None
+    else:
+        rotationDist = sys.argv[2]
+        if rotationDist is an integer:
+            rotationDist = int(rotationDist)
+        else:
+            print(f"ERROR: {rotationDist} is not a valid rotation distance\n")
+            usageMessage(exitCode=1)
+        if rotationDist < 0 or rotationDist > 25:
+            print(f"ERROR: {rotationDist} is not in the inclusive range of [0, 25]\n")
+            usageMessage(exitCode=1)
+    filename = sys.argv[1]
+    processFile(filename=filename, rotation=rotationDist)
+```
+
+*   Notes
+    *   `sys.argv[0]` is the main filename, so `len(sys.argv) > 1` always
+    *   If `rotationDist` is `None`, that indicates all rotations will be done by `processFile`
+    *   This likely won't be an actual function, and will just be 
 
 #### Usage Message
+Print a usage message, exiting with exitCode
+
+Doesn't return anything, as program terminates in this function
+
 ```py
 def printUsage(exitCode : int = 0) -> None:
     MSG =
-    """
+    f"""
     USAGE:
-      $ python src/main.py <file_path> [rotation_distance]
+      $ python {sys.argv[0]} <file_path> [rotation_distance]
     
       The <file_path> argument is *required* and must be a path to a valid file.
 
@@ -99,7 +136,101 @@ def printUsage(exitCode : int = 0) -> None:
         distances are run and output.
     """
     print(MSG) without newline at end
+    exit with exitCode
 ```
+
+*   Notes
+    *   `sys.argv[0]` is the file name, so it can be used to provide an accurate filename in the usage message printed
+
+#### Process File
+Given a filename and rotation distance, open and read the file into a string, and then apply the cipher to the string
+
+Returns nothing
+
+```py
+def processFile(filename : str, rotation : Optional[int]) -> None:
+    file = open(filename)
+    fileContents = file.read()
+    file.close()
+    if rotation is None:
+        # Do all rotations
+        for rot in 0 to 25:
+            printBanner(filename, rot)
+            cipherText = cipherString(fileContents, rot)
+            print(cipherText) with no extra newline
+    else:
+        printBanner(filename, rotation)
+        cipherText = cipherString(fileContents, rotation)
+        print(cipherText) with no extra newline
+```
+
+*   Notes
+    *   `open` function will crash if `filename` is not a valid file for reading; this is expected and relied on
+    *   The `Optional[int]` type indicates a value can be `None` or an `int`
+    *   Checking for `rotation` being in [0, 25] is done before this function is called 
+
+#### Print Banner
+Prints the banner with a specified rotation distance
+
+Returns nothing, just prints the banner
+
+```py
+def printBanner(filename : str, rotation : int) -> None:
+    MSG =
+    f"""
+    ======================================================
+    {filename} rotated by {rotation} positions
+    ======================================================
+    """
+    print(MSG) with no extra newline
+```
+
+#### Cipher String
+Given a string and rotation distance, cipher the string with the Caesar Cipher
+
+Returns the string after it's been ciphered
+
+```py
+def cipherString(stringToCipher : str, rotation : int) -> str:
+    cipheredMessage = ""
+    for character in stringToCipher:
+        add cipherCharacter(character, rotation) to end of cipheredMessage
+    return cipheredMessage
+```
+
+#### Cipher Character
+Takes a single character and rotation distance, giving back a ciphered character, applying the Caesar Cipher algorithm detailed above
+
+Returns the newly ciphered character, or the original character if character shouldn't be ciphered
+
+```py
+def cipherCharacter(char : str, rot : str) -> str:
+    if char is in [A-Z]:
+        charBaseVal = ord("A")
+    elif char is in [a-z]:
+        charBaseVal = ord("a")
+    else:
+        # Don't cipher this character
+        return char
+    charOrdVal = ord(char)
+    # Subtract base value from original ord value so we can perform modular arithmetic
+    newCharOrdVal = (charOrdVal - charBaseVal)
+    # Add rotation value
+    newCharOrdVal += rot
+    # mod 26 to 'shift' correctly shift around alphabet
+    newCharOrdVal = newCharOrdVal % 26
+    # Shift the newCharOrdVal by the charBaseVal to return to the 'true' ordinal value
+    newCharOrdVal = newCharOrdVal + charBaseVal
+    # Convert ordinal value back to character to return
+    return chr(newCharOrdVal)
+```
+
+*   Notes
+    *   To compute if a character is in [A-Z] or [a-z]...
+        *   `ord("A") == 65`
+        *   `ord("Z") == 90`
+        *   `ord("a") == 97`
+        *   `ord("z") == 122`
 
 ## Phase 3: Implementation
 
