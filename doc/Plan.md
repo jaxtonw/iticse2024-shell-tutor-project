@@ -54,6 +54,53 @@ I have mentioned this before, but I'm going to use the `unittest` framework to s
 
 ## Phase 2: Design
 
+This program should be relatively straight forward. However, I've found a few key attributes that can be separated and likely turned into functions.
+
+0.  Parse command line arguments
+    *   Read from `sys.argv` and determine what to do from there
+    *   If no args are provided, or arguments are invalid, print the usage message
+        *   If args aren't provided, just print usage message and exit with a success exit code (exit code 0, if you know shell conventions)
+        *   If arguments are invalid (namely, if the rot distance isn't an integer in range 0-25), print message indicating the argument is invalid and then print a usage message, exiting with a failure exit code (exit code not equal to 0, if you know shell conventions. I'll probably use exit code 1)
+1.  Usage message
+    *   Prints the usage message and then exits the program with a specified exit code
+2.  Process file
+    *   Given a filename argument, open and read the file into a string, and then apply the cipher to the string
+    *   Can take an argument that specifies the specific rotation distance. If this argument is None, then print all rotation distances 0-25
+    *   Prints the banner indicating the rotation distance
+    *   Gives the string and rotation distance to the actual `cipherString` function, printing the result
+    *   Kind of the main "driver" of the program
+3.  Print banner
+    *   Prints the banner with a specified rotation distance
+    *   The banner is the same, aside from the number of the rotation distance, so this is perfect for a small function!
+4.  Cipher string
+    *   Given a string and rotation distance, cipher the string with the Caesar Cipher
+    *   Relies on cipher character function to cipher individual characters 
+    *   Return the newly constructed ciphered string
+5.  Cipher character
+    *   Takes a single character and rotation distance
+    *   Returns the newly ciphered character
+    *   If given a character that shouldn't be ciphered, return that character as-is
+
+### Function Psuedocode
+The psuedocode for these function stubs are going to use Python-isms, but won't necessarily be working Python code.
+
+#### Usage Message
+```py
+def printUsage(exitCode : int = 0) -> None:
+    MSG =
+    """
+    USAGE:
+      $ python src/main.py <file_path> [rotation_distance]
+    
+      The <file_path> argument is *required* and must be a path to a valid file.
+
+      The rotation distance argument is *optional*, and is integers in the range
+        0 to 25, inclusive. If a rotation distance is not specified, all rotation
+        distances are run and output.
+    """
+    print(MSG) without newline at end
+```
+
 ## Phase 3: Implementation
 
 ## Phase 4: Testing & Debugging
