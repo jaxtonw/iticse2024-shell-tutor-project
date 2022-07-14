@@ -26,9 +26,9 @@
 import sys
 from typing import Optional
 
+
 def printUsage(exitCode : int = 0) -> None:
-    MSG =
-    f"""
+    MSG = f"""\
     USAGE:
       $ python {sys.argv[0]} <file_path> [rotation_distance]
     
@@ -38,17 +38,17 @@ def printUsage(exitCode : int = 0) -> None:
         0 to 25, inclusive. If a rotation distance is not specified, all rotation
         distances are run and output.
     """
-    print(MSG) without newline at end
-    exit with exitCode
+    print(MSG, end='')
+    sys.exit(exitCode)
+
 
 def printBanner(filename : str, rotation : int) -> None:
-    MSG =
-    f"""
+    MSG = f"""\
     ======================================================
     {filename} rotated by {rotation} positions
     ======================================================
     """
-    print(MSG) with no extra newline
+    print(MSG, end='')
 
 
 def processFile(filename : str, rotation : Optional[int]) -> None:
@@ -57,31 +57,32 @@ def processFile(filename : str, rotation : Optional[int]) -> None:
     file.close()
     if rotation is None:
         # Do all rotations
-        for rot in 0 to 25:
+        for rot in range(0, 25):
             printBanner(filename, rot)
             cipherText = cipherString(fileContents, rot)
-            print(cipherText) with no extra newline
+            print(cipherText, end='')
     else:
         printBanner(filename, rotation)
         cipherText = cipherString(fileContents, rotation)
-        print(cipherText) with no extra newline
+        print(cipherText, end='')
 
 
 def cipherString(stringToCipher : str, rotation : int) -> str:
     cipheredMessage = ""
     for character in stringToCipher:
-        add cipherCharacter(character, rotation) to end of cipheredMessage
+        cipheredMessage += cipherCharacter(character, rotation)
     return cipheredMessage
 
+
 def cipherCharacter(char : str, rot : str) -> str:
-    if char is in [A-Z]:
+    charOrdVal = ord(char)
+    if 65 <= charOrdVal < 90:
         charBaseVal = ord("A")
-    elif char is in [a-z]:
+    elif 97 < charOrdVal < 122:
         charBaseVal = ord("a")
     else:
         # Don't cipher this character
         return char
-    charOrdVal = ord(char)
     # Subtract base value from original ord value so we can perform modular arithmetic
     newCharOrdVal = (charOrdVal - charBaseVal)
     # Add rotation value
@@ -92,6 +93,7 @@ def cipherCharacter(char : str, rot : str) -> str:
     newCharOrdVal = newCharOrdVal + charBaseVal
     # Convert ordinal value back to character to return
     return chr(newCharOrdVal)
+
 
 if __name == "__main__":
     if len(sys.argv) == 1:
