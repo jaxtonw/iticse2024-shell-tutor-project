@@ -1,18 +1,23 @@
 # Software Development Plan
 
-## Phase 0: Requirements Specification
+## Phase 0: Requirements Analysis (tag name `analyzed`)
+*(20% of your effort)*
 
-### What Am I Asked To Do? 
+
+### Re-write the instructions in my own words
 This project will be a Python "Caesar Cipher" program. It will take command line arguments that specify the file to cipher/decipher, and an argument specifying the rotation distance. If this argument is not provided, then all valid rotation distances will be output.
 
-The Caesar Cipher is a speicific cipher algorithm that shifts alphabetic characters, and will "wrap around" the alphabet. For example, with a cipher rotation of 1, the letter A will become B, the letter B becomes C, the letter Z becomes A, so on and so forth. Uppercase characters will remain upppercase, and lowercase characters will remain lowercase. Characters that are not alphabetic, meaning A-Z, will remain untouched by the Caesar Cipher. 
+
+### The problem this program aims to solve
+The Caesar Cipher is a specific cipher algorithm that shifts alphabetic characters, and will "wrap around" the alphabet. For example, with a cipher rotation of 1, the letter A will become B, the letter B becomes C, the letter Z becomes A, so on and so forth. Uppercase characters will remain uppercase, and lowercase characters will remain lowercase. Characters that are not alphabetic, meaning A-Z, will remain untouched by the Caesar Cipher. 
 
 If given *no* arguments on the command line, this program will also output a usage message dictating how to use it. If invalid arguments are provided (namely, if the rotation distance is not in the inclusive range of 0-25), a message indicating an invalid rotation distance was specified is printed out *as well as* the usage message.
 
 Unit tests are also going to be created, as I have a proclivity to do test driven development. This isn't directly required by the instructions, but is something I desire to do to ensure the program is robust and accurate in it's output.
 
+
 ### Things I Do Know
-Luckily, I've been working with Python for a while now and feel confident that I know *most* of the operations that I will need to perform to complete this program. I feel confident with modular arithmetic (to shift characters). I feel confident with crafting a usage message. I feel *mostly* confident with creating unittests using the `unittest` framework.
+Luckily, I've been working with Python for a while now and feel confident that I know *most* of the operations that I will need to perform to complete this program. I feel confident with modular arithmetic (to shift characters). I feel confident with crafting a usage message. I feel *mostly* confident with creating unit tests using the `unittest` framework.
 
 ### Things I Don't Know/Should Research More
 *   I should research processing command line arguments a bit more. I recall it has something to do with `sys.argv`, but it's always good to have a refresher.
@@ -26,14 +31,13 @@ Luckily, I've been working with Python for a while now and feel confident that I
     *   What are some of the key `assert` methods that will come in handy?
     *   Did the starter code handle most of the `unittest` setup for me with `runTests.py`, or do I need to do anything else?
   
-## Phase 1: System Analysis
 
 ### Program Input
 This program takes command line arguments to receive input of the filename and rotation distance.
 
 If the file exists, it's contents are read in as a string and processed by the program. This file will likely be processed line-by-line, as I have a proclivity to process files this way.
 
-### Applying Cipher Algorithm
+### Applying the Cipher Algorithm
 When reading a string and applying the Caesar Cipher to it, apply the cipher algorithm *only* to characters that are in the range `[A-Z]` and `[a-z]`. If a character does not fall into this range, we do *not* apply the cipher to it. Characters that are *not* shifted are appended to the `outputString` as is, and characters that do get shifted get inputted into a "shift" function, and it's result is appended to the `outputString`.
 
 ### Caesar Cipher Shift Character Algorithm
@@ -49,10 +53,12 @@ One of the key "algorithms" I need to shift the characters is going to rely on m
 ### Program Output
 The `outputString` is printed out after applying the cipher to the original string.
 
-### Unit Testing
+### Unit Tests
 I have mentioned this before, but I'm going to use the `unittest` framework to setup unit tests. I will craft a test suite that can be run from the test driver program `runTests.py` using the built in `assert` methods on a `unittest` Test Suite.
 
-## Phase 2: Design
+
+## Phase 1: Design (tag name `designed`)
+*(30% of your effort)*
 
 This program should be relatively straight forward. However, I've found a few key attributes that can be separated and likely turned into functions.
 
@@ -81,8 +87,9 @@ This program should be relatively straight forward. However, I've found a few ke
     *   Returns the newly ciphered character
     *   If given a character that shouldn't be ciphered, return that character as-is
 
-### Function Psuedocode
-The psuedocode for these function stubs are going to use Python-isms, but won't necessarily be working Python code. It will be *very* similar though, because Python is basically "executable psuedocode" by design. 
+
+### Function Pseudocode
+The pseudocode for these function stubs are going to use Python-isms, but won't necessarily be working Python code. It will be *very* similar though, because Python is basically "executable pseudocode" by design. 
 
 I like Python's type hinting syntax, so I use it for function arguments and return types.
 
@@ -91,7 +98,7 @@ Parse the command line arguments correctly, continuing on to cipher message or p
 
 Returns nothing
 
-```py
+```python
 def parseCLArgs() -> None:
     if len of sys.argv is 1:
         usageMessage(exitCode=0)
@@ -118,11 +125,11 @@ def parseCLArgs() -> None:
     *   This likely won't be an actual function, and will just be 
 
 #### Usage Message
-Print a usage message, exiting with exitCode
+Print a usage message, exiting with `exitCode`
 
 Doesn't return anything, as program terminates in this function
 
-```py
+```python
 def printUsage(exitCode : int = 0) -> None:
     MSG =
     f"""
@@ -139,15 +146,15 @@ def printUsage(exitCode : int = 0) -> None:
     exit with exitCode
 ```
 
-*   Notes
-    *   `sys.argv[0]` is the file name, so it can be used to provide an accurate filename in the usage message printed
+`sys.argv[0]` is the program's own name, which is why it's included in the usage message
+
 
 #### Process File
 Given a filename and rotation distance, open and read the file into a string, and then apply the cipher to the string
 
 Returns nothing
 
-```py
+```python
 def processFile(filename : str, rotation : Optional[int]) -> None:
     file = open(filename)
     fileContents = file.read()
@@ -169,12 +176,13 @@ def processFile(filename : str, rotation : Optional[int]) -> None:
     *   The `Optional[int]` type indicates a value can be `None` or an `int`
     *   Checking for `rotation` being in [0, 25] is done before this function is called 
 
+
 #### Print Banner
 Prints the banner with a specified rotation distance
 
 Returns nothing, just prints the banner
 
-```py
+```python
 def printBanner(filename : str, rotation : int) -> None:
     MSG =
     f"""
@@ -190,7 +198,7 @@ Given a string and rotation distance, cipher the string with the Caesar Cipher
 
 Returns the string after it's been ciphered
 
-```py
+```python
 def cipherString(stringToCipher : str, rotation : int) -> str:
     cipheredMessage = ""
     for character in stringToCipher:
@@ -203,7 +211,7 @@ Takes a single character and rotation distance, giving back a ciphered character
 
 Returns the newly ciphered character, or the original character if character shouldn't be ciphered
 
-```py
+```python
 def cipherCharacter(char : str, rot : str) -> str:
     if char is in [A-Z]:
         charBaseVal = ord("A")
@@ -232,18 +240,22 @@ def cipherCharacter(char : str, rot : str) -> str:
         *   `ord("a") == 97`
         *   `ord("z") == 122`
 
-## Phase 3: Implementation
 
-Implementation went by without a hitch! The design I had seemed to be implemented according to plan. The most notable change from the design was that the `parseCLArgs` function became the `if __name__ == "__main__":` block, as that was the true entrypoint of the function.
+## Phase 2: Implementation (tag name `implemented`)
+*(15% of your effort)*
+
+Implementation went by without a hitch! The design I had seemed to be implemented according to plan. The most notable change from the design was that the `parseCLArgs` function became the `if __name__ == "__main__":` block, as that was the true entry point of the function.
 
 I needed to import `sys` for `sys.argv` and `sys.exit`. I also needed to import `typing` so I can have access to the `Optional` type for type hinting. This `typing` module wasn't explicitly listed in the instructions, but I talked with DuckieCorp management (my TA) to be sure it was okay. They told me that was an oversight when DuckieCorp management wrote the instructions, and they intended to give access to the `typing` module as an approved import. Small oversight in the instructions. Pobody's nerfect, I guess!
 
-## Phase 4: Testing & Debugging
+## Phase 3: Testing and Debugging (tag name `tested`)
+*(30% of your effort)*
 
 ### Initial Unit Test Results
-My intitial unittests had some small issues that needed to be fixed. Not in the logic of the tests themselves, but just in the reference to a function name and accidentally not making a tuple when I intended it to be.
+My initial unit tests had some small issues that needed to be fixed. Not in the logic of the tests themselves, but just in the reference to a function name and accidentally not making a tuple when I intended it to be.
 
-After fixing this, I was able to run the unittests against my program, where I received this initial output:
+After fixing this, I was able to run the unit tests against my program, where I received this initial output:
+
 ```
 $ python src/runTests.py 
 testCipherCharAccuracyLowercase (Testing.testCipher.TestCipher) ... FAIL
@@ -352,8 +364,53 @@ I created a function named `printUsage`, but accidentally referred to it as `usa
 
 As I continued testing the various functions of my program, I encountered another minor issue when doing all rotations. I do all rotations 0-24, but somehow missed the 25th rotation! This ended up just being an issue with the `range` function, where I forgot that Python's range function is *inclusive* on the bottom end, and *exclusive* on the top end. *Duh doy!*
 
-As of this time, my program is thoroghly tested and meets all program requirements with no known issues or bugs! Woo, go me!
+As of this time, my program is thoroughly tested and meets all program requirements with no known issues or bugs! Woo, go me!
 
-## Phase 5: Deployment
+## Phase 4: Deployment (tag name `deployed`)
+*(5% of your effort)*
 
-## Phase 6: Maintenance
+This project has been tracked with Git throughout it's development. Now that I'm at the end of the project, the final commit will be made and deployed to GitLab to be shared with my managers at DuckieCorp. I also *double checked* my submission against the assignment rubric before deploying it, just to be safe!
+
+## Phase 5: Maintenance
+
+### What parts of your program are sloppily written and hard to understand?
+
+By the end of the project I had arrived at good, clean code.  I think it will stand the test of time.
+
+### Are there parts of your program which you aren't quite sure how/why they work?
+
+Not after all of the back-and-forth I had with the unit tests!
+
+### If a bug is reported in a few months, how long would it take you to find the cause?
+
+At most a day or so.  I would, of course, add a new unit test to detect the bug before I fixed it, and let the test tell me when the bug was gone.
+
+
+### Will your documentation make sense to anybody besides yourself?
+
+Yes.
+
+
+### Will your documentation make sense to yourself in six month's time?
+
+Yes.
+
+
+### How easy will it be to add a new feature to this program in a year?
+
+The code is clean and modular; adding a feature will be straightforward.  Because of the documentation, unit tests, and code quality, it should be easy for a newcomer with no prior familiarity to pick it up.
+
+
+### Will your program continue to work after upgrading your computer's hardware?
+
+This is a simple program with simple needs.  No part of it depends on any specialized hardware.
+
+
+### Will your program continue to work after upgrading the operating system?
+
+There are no parts of the program that are reliant on the underlying OS.  It is "cross-platform".
+
+
+### Will your program continue to work after upgrading to the next version of Python?
+
+It is possible that a later version of Python will deprecate language features that I made use of in this program.  I stuck to modern practices in all places.  To my knowledge, no feature of this program is in danger of becoming obsolete any time soon.

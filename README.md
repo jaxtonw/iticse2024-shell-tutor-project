@@ -1,14 +1,9 @@
 # CS 1440 Sample Project: Caesar Cipher
 
--   [Documentation](doc)
-    -   [Plan](doc/Plan.md)
-    -   [Spring Signature](doc/Signature.md)
--   [Instructions](instructions)
-    -   [Rubric](instructions/Rubric.md)
-    -   [Hints](instructions/Hints.md)
-    -   [Expected Output](instructions/Expected_Output.md)
--   [Sample Data Files](data)
--   [Source Code](src)
+-   [Instructions](./instructions/README.md)
+    -   [Expected Output](./instructions/Expected_Output.md)
+-   [Sample Data Files](./data/)
+-   [Source Code](./src/)
     -   [Main Driver Program](src/main.py)
     -   [Test Driver Program](src/runTests.py)
 
