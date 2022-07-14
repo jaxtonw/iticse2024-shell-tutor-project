@@ -23,4 +23,91 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 
-print("TODO: Create the Caesar Cipher!")
+import sys
+from typing import Optional
+
+def printUsage(exitCode : int = 0) -> None:
+    MSG =
+    f"""
+    USAGE:
+      $ python {sys.argv[0]} <file_path> [rotation_distance]
+    
+      The <file_path> argument is *required* and must be a path to a valid file.
+
+      The rotation distance argument is *optional*, and is integers in the range
+        0 to 25, inclusive. If a rotation distance is not specified, all rotation
+        distances are run and output.
+    """
+    print(MSG) without newline at end
+    exit with exitCode
+
+def printBanner(filename : str, rotation : int) -> None:
+    MSG =
+    f"""
+    ======================================================
+    {filename} rotated by {rotation} positions
+    ======================================================
+    """
+    print(MSG) with no extra newline
+
+
+def processFile(filename : str, rotation : Optional[int]) -> None:
+    file = open(filename)
+    fileContents = file.read()
+    file.close()
+    if rotation is None:
+        # Do all rotations
+        for rot in 0 to 25:
+            printBanner(filename, rot)
+            cipherText = cipherString(fileContents, rot)
+            print(cipherText) with no extra newline
+    else:
+        printBanner(filename, rotation)
+        cipherText = cipherString(fileContents, rotation)
+        print(cipherText) with no extra newline
+
+
+def cipherString(stringToCipher : str, rotation : int) -> str:
+    cipheredMessage = ""
+    for character in stringToCipher:
+        add cipherCharacter(character, rotation) to end of cipheredMessage
+    return cipheredMessage
+
+def cipherCharacter(char : str, rot : str) -> str:
+    if char is in [A-Z]:
+        charBaseVal = ord("A")
+    elif char is in [a-z]:
+        charBaseVal = ord("a")
+    else:
+        # Don't cipher this character
+        return char
+    charOrdVal = ord(char)
+    # Subtract base value from original ord value so we can perform modular arithmetic
+    newCharOrdVal = (charOrdVal - charBaseVal)
+    # Add rotation value
+    newCharOrdVal += rot
+    # mod 26 to 'shift' correctly shift around alphabet
+    newCharOrdVal = newCharOrdVal % 26
+    # Shift the newCharOrdVal by the charBaseVal to return to the 'true' ordinal value
+    newCharOrdVal = newCharOrdVal + charBaseVal
+    # Convert ordinal value back to character to return
+    return chr(newCharOrdVal)
+
+if __name == "__main__":
+    if len(sys.argv) == 1:
+        usageMessage(exitCode=0)
+    if len(sys.argv) == 2:
+        # Only the filename is provided, so do all rotations
+        rotationDist = None
+    else:
+        rotationDist = sys.argv[2]
+        if rotationDist.isdigit():
+            rotationDist = int(rotationDist)
+        else:
+            print(f"ERROR: '{rotationDist}' is not a valid rotation distance\n")
+            usageMessage(exitCode=1)
+        if rotationDist < 0 or rotationDist > 25:
+            print(f"ERROR: '{rotationDist}' is not in the inclusive range of [0, 25]\n")
+            usageMessage(exitCode=1)
+    filename = sys.argv[1]
+    processFile(filename=filename, rotation=rotationDist)
