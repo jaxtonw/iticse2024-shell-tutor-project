@@ -234,6 +234,10 @@ def cipherCharacter(char : str, rot : str) -> str:
 
 ## Phase 3: Implementation
 
+Implementation went by without a hitch! The design I had seemed to be implemented according to plan. The most notable change from the design was that the `parseCLArgs` function became the `if __name__ == "__main__":` block, as that was the true entrypoint of the function.
+
+I needed to import `sys` for `sys.argv` and `sys.exit`. I also needed to import `typing` so I can have access to the `Optional` type for type hinting. This `typing` module wasn't explicitly listed in the instructions, but I talked with DuckieCorp management (my TA) to be sure it was okay. They told me that was an oversight when DuckieCorp management wrote the instructions, and they intended to give access to the `typing` module as an approved import. Small oversight in the instructions. Pobody's nerfect, I guess!
+
 ## Phase 4: Testing & Debugging
 
 ## Phase 5: Deployment

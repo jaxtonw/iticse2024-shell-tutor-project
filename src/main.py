@@ -44,10 +44,10 @@ def printUsage(exitCode : int = 0) -> None:
 
 def printBanner(filename : str, rotation : int) -> None:
     MSG = f"""\
-    ======================================================
-    {filename} rotated by {rotation} positions
-    ======================================================
-    """
+======================================================
+{filename} rotated by {rotation} positions
+======================================================
+"""
     print(MSG, end='')
 
 
@@ -95,7 +95,7 @@ def cipherCharacter(char : str, rot : str) -> str:
     return chr(newCharOrdVal)
 
 
-if __name == "__main__":
+if __name__ == "__main__":
     if len(sys.argv) == 1:
         usageMessage(exitCode=0)
     if len(sys.argv) == 2:
