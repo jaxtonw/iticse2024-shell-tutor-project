@@ -240,6 +240,120 @@ I needed to import `sys` for `sys.argv` and `sys.exit`. I also needed to import 
 
 ## Phase 4: Testing & Debugging
 
+### Initial Unit Test Results
+My intitial unittests had some small issues that needed to be fixed. Not in the logic of the tests themselves, but just in the reference to a function name and accidentally not making a tuple when I intended it to be.
+
+After fixing this, I was able to run the unittests against my program, where I received this initial output:
+```
+$ python src/runTests.py 
+testCipherCharAccuracyLowercase (Testing.testCipher.TestCipher) ... FAIL
+testCipherCharAccuracyNoShift (Testing.testCipher.TestCipher) ... ok
+testCipherCharAccuracyUppercase (Testing.testCipher.TestCipher) ... FAIL
+testCipherCharIgnoreNonAlphabetic (Testing.testCipher.TestCipher) ... ok
+testCipherStringAccuracyLowercase (Testing.testCipher.TestCipher) ... FAIL
+testCipherStringAccuracyMixedChars (Testing.testCipher.TestCipher) ... ok
+testCipherStringAccuracyUppercase (Testing.testCipher.TestCipher) ... FAIL
+testCipherStringIgnoreNonAlphabetic (Testing.testCipher.TestCipher) ... ok
+
+======================================================================
+FAIL: testCipherCharAccuracyLowercase (Testing.testCipher.TestCipher)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jaxtonw/Documents/USU/Sum22/1440/shell-tutor-dev/git-repos-for-lessons/git-tag-project-repo/src/Testing/testCipher.py", line 69, in testCipherCharAccuracyLowercase
+    self.assertEquals(cipherOutput, expectedOutputStr)
+AssertionError: 'a' != 'b'
+- a
++ b
+
+
+======================================================================
+FAIL: testCipherCharAccuracyUppercase (Testing.testCipher.TestCipher)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jaxtonw/Documents/USU/Sum22/1440/shell-tutor-dev/git-repos-for-lessons/git-tag-project-repo/src/Testing/testCipher.py", line 36, in testCipherCharAccuracyUppercase
+    self.assertEquals(cipherOutput, expectedOutputStr)
+AssertionError: 'Z' != 'A'
+- Z
++ A
+
+
+======================================================================
+FAIL: testCipherStringAccuracyLowercase (Testing.testCipher.TestCipher)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jaxtonw/Documents/USU/Sum22/1440/shell-tutor-dev/git-repos-for-lessons/git-tag-project-repo/src/Testing/testCipher.py", line 130, in testCipherStringAccuracyLowercase
+    self.assertEquals(cipherString(lowerAlphabet, 1), lowerAlphabetShiftedOne)
+AssertionError: 'acdefghijklmnopqrstuvwxyzz' != 'bcdefghijklmnopqrstuvwxyza'
+- acdefghijklmnopqrstuvwxyzz
+? ^                        ^
++ bcdefghijklmnopqrstuvwxyza
+? ^                        ^
+
+
+======================================================================
+FAIL: testCipherStringAccuracyUppercase (Testing.testCipher.TestCipher)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jaxtonw/Documents/USU/Sum22/1440/shell-tutor-dev/git-repos-for-lessons/git-tag-project-repo/src/Testing/testCipher.py", line 150, in testCipherStringAccuracyUppercase
+    self.assertEquals(cipherString(upperAlphabet, 1), upperAlphabetShiftedOne)
+AssertionError: 'BCDEFGHIJKLMNOPQRSTUVWXYZZ' != 'BCDEFGHIJKLMNOPQRSTUVWXYZA'
+- BCDEFGHIJKLMNOPQRSTUVWXYZZ
+?                          ^
++ BCDEFGHIJKLMNOPQRSTUVWXYZA
+?                          ^
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.003s
+
+FAILED (failures=4)
+```
+
+As can be seen here, there's an issue with the accuracy of my cipher algorithm. For the most part, it is correct. However, it appears to be ciphering 'Z', 'a', and 'z' incorrectly. As these characters are left untouched, I suspect they are slipping through my cipher algorithm and being treated as if they're not characters in the group `[A-Z]` or `[a-z]`. Time for a bug hunt!
+
+### Bug Fix Update And Second Run Of Unit Tests
+
+My bug hunt was successful! I found that I accidentally used `<` instead of `<=` in my `cipherCharacter` function, which caused this issue. After fixing this, I produced the following output with my unit tests.
+
+```
+$ python src/runTests.py 
+testCipherCharAccuracyLowercase (Testing.testCipher.TestCipher) ... ok
+testCipherCharAccuracyNoShift (Testing.testCipher.TestCipher) ... ok
+testCipherCharAccuracyUppercase (Testing.testCipher.TestCipher) ... ok
+testCipherCharIgnoreNonAlphabetic (Testing.testCipher.TestCipher) ... ok
+testCipherStringAccuracyLowercase (Testing.testCipher.TestCipher) ... ok
+testCipherStringAccuracyMixedChars (Testing.testCipher.TestCipher) ... ok
+testCipherStringAccuracyUppercase (Testing.testCipher.TestCipher) ... ok
+testCipherStringIgnoreNonAlphabetic (Testing.testCipher.TestCipher) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.003s
+
+OK
+```
+
+This leads me to suspect that my cipher algorithms are correct!
+
+### Manual Performance Testing
+
+Now, I manually test my program to ensure it's UI is correct, and I aim to perform a 'sanity check' regarding the accuracy of the cipher.
+
+As I went to test the usage message, I found an issue in my implementation that was luckily a quick fix.
+
+```
+$ python src/main.py 
+Traceback (most recent call last):
+  File "/home/jaxtonw/Documents/USU/Sum22/1440/shell-tutor-dev/git-repos-for-lessons/git-tag-project-repo/src/main.py", line 100, in <module>
+    usageMessage(exitCode=0)
+NameError: name 'usageMessage' is not defined
+```
+
+I created a function named `printUsage`, but accidentally referred to it as `usageMessage`. This was an easy fix, renaming this function to be `usageMessage` to match how I used it in the code. Getting this to run revealed a small indentation formatting issue with the usage message, which was an easy fix. The usage message works perfectly when the program is given no arguments. I also fed it invalid rotation distances (such as non-integer strings, and integers outside of the valid range) and the usage message worked as expected there!
+
+As I continued testing the various functions of my program, I encountered another minor issue when doing all rotations. I do all rotations 0-24, but somehow missed the 25th rotation! This ended up just being an issue with the `range` function, where I forgot that Python's range function is *inclusive* on the bottom end, and *exclusive* on the top end. *Duh doy!*
+
+As of this time, my program is thoroghly tested and meets all program requirements with no known issues or bugs! Woo, go me!
+
 ## Phase 5: Deployment
 
 ## Phase 6: Maintenance

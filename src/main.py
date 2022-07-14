@@ -27,17 +27,17 @@ import sys
 from typing import Optional
 
 
-def printUsage(exitCode : int = 0) -> None:
+def usageMessage(exitCode : int = 0) -> None:
     MSG = f"""\
-    USAGE:
-      $ python {sys.argv[0]} <file_path> [rotation_distance]
-    
-      The <file_path> argument is *required* and must be a path to a valid file.
+USAGE:
+    $ python {sys.argv[0]} <file_path> [rotation_distance]
 
-      The rotation distance argument is *optional*, and is integers in the range
-        0 to 25, inclusive. If a rotation distance is not specified, all rotation
-        distances are run and output.
-    """
+    The <file_path> argument is *required* and must be a path to a valid file.
+
+    The rotation distance argument is *optional*, and is integers in the range
+    0 to 25, inclusive. If a rotation distance is not specified, all rotation
+    distances are run and output.
+"""
     print(MSG, end='')
     sys.exit(exitCode)
 
@@ -57,7 +57,7 @@ def processFile(filename : str, rotation : Optional[int]) -> None:
     file.close()
     if rotation is None:
         # Do all rotations
-        for rot in range(0, 25):
+        for rot in range(0, 26):
             printBanner(filename, rot)
             cipherText = cipherString(fileContents, rot)
             print(cipherText, end='')
@@ -76,9 +76,9 @@ def cipherString(stringToCipher : str, rotation : int) -> str:
 
 def cipherCharacter(char : str, rot : str) -> str:
     charOrdVal = ord(char)
-    if 65 <= charOrdVal < 90:
+    if 65 <= charOrdVal <= 90:
         charBaseVal = ord("A")
-    elif 97 < charOrdVal < 122:
+    elif 97 <= charOrdVal <= 122:
         charBaseVal = ord("a")
     else:
         # Don't cipher this character
