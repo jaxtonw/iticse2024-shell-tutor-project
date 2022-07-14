@@ -28,7 +28,7 @@ import unittest
 from Testing import testCipher
 
 suite = unittest.TestSuite()
-tests = (testCipher.TestCipher)
+tests = (testCipher.TestCipher,)
 
 for test in tests:
     suite.addTest(unittest.makeSuite(test))
